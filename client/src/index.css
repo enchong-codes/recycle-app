@@ -20,3 +20,9 @@
 body {
   background-color: #b8b888;
 }
+
+.icon {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}

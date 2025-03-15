@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { useUser } from '../contexts/UserContext'; // Import the useUser hook
+import { useUser } from '../../contexts/UserContext'; // Import the useUser hook
 
-export default function Quiz() {
+export default function Rewards() {
   const { user, setUser } = useUser(); // Access user data and setUser from context
   const [selectedItem, setSelectedItem] = useState('');
   const [userPoints, setUserPoints] = useState(user ? user.points : 0); // Initialize with user's points
@@ -52,7 +52,7 @@ export default function Quiz() {
 
   return (
     <section>
-      <h1>Quiz</h1>
+      <h1>Rewards</h1>
       <Link to={'/dashboard'}>
         <button>Home</button>
       </Link>

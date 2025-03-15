@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { useUser } from '../contexts/UserContext'; // Import the useUser hook
+import { useUser } from '../../contexts/UserContext'; // Import the useUser hook
 
-export default function RecyclePage() {
+export default function Quiz() {
   const { user, setUser } = useUser(); // Access user data and setUser from context
   const [selectedItem, setSelectedItem] = useState('');
   const [userPoints, setUserPoints] = useState(user ? user.points : 0); // Initialize with user's points
@@ -52,23 +52,11 @@ export default function RecyclePage() {
 
   return (
     <section>
+      <h1>Quiz</h1>
       <Link to={'/dashboard'}>
         <button>Home</button>
       </Link>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="item">Choose a recyclable item:</label>
-        <select id="item">
-          <option value="">-- Select recycled item --</option>
-          <option value="591mL Plastic Bottle">591mL Plastic Bottle</option>
-          <option value="2L Plastic Bottle">2L Plastic Bottle</option>
-          <option value="4L Plastic Jug">4L Plastic Jug</option>
-          <option value="Detergent Bottle">Detergent Bottle</option>
-          <option value="Shampoo/Conditioner Bottle">
-            Shampoo/Conditioner Bottle
-          </option>
-        </select>
-        <button type="submit">Submit</button>
-      </form>
+      <form onSubmit={handleSubmit}></form>
     </section>
   );
 }

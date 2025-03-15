@@ -3,6 +3,9 @@ import { useState } from 'react';
 import styles from './Dashboard.module.css';
 import { useUser } from '../contexts/UserContext';
 import recyclingData from '../data/recyclingdata';
+import recycleIcon from '../images/recycle.png';
+import notepad from '../images/notepad.png';
+import podium from '../images/podium.png';
 
 export default function Dashboard() {
   const { user } = useUser();
@@ -52,24 +55,39 @@ export default function Dashboard() {
       <h3 className={styles.actionHeader}>Take action!</h3>
       <div className={`${styles.container} ${styles.actions}`}>
         <Link to={'/recycle'}>
-          <button>Recycle</button>
+          <button>
+            <img className="icon" src={recycleIcon} alt="recycle icon" />
+            <span>Recycle</span>
+          </button>
         </Link>
         <Link to={'/quiz'}>
-          <button>Quiz</button>
+          <button>
+            <img className="icon" src={notepad} alt="notepad icon" />
+            <span>Quiz</span>
+          </button>
         </Link>
         <Link to={'/leaderboard'}>
-          <button>Leaderboard</button>
+          <button>
+            <img className="icon" src={podium} alt="podium icon" />
+            <span>Leaderboard</span>
+          </button>
         </Link>
       </div>
       <div className={styles.container}>
         <div className={styles.points}>
           <h1>{'189'} Points</h1>
-          <button className={styles.rewardsbtn}>Rewards</button>
+          <Link to={'/rewards'}>
+            <button className={styles.rewardsbtn}>Rewards</button>
+          </Link>
         </div>
       </div>
       <div className={styles.bottomnav}>
-        <button>Quick Facts</button>
-        <button>Resources</button>
+        <Link to={'/quickfacts'}>
+          <button>Quick Facts</button>
+        </Link>
+        <Link to={'/resources'}>
+          <button>Resources</button>
+        </Link>
       </div>
     </main>
   );
