@@ -10,22 +10,18 @@ export default function RecyclePage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const item = e.target.item.value; // Get selected item
 
-    const item = e.target.item.value; // Get the selected item
-
-    // Prepare the data to send in the request body
     const data = {
       item: item,
-      oldPoints: userPoints, // Send the current points of the user
-      userId: userId, // Send the userId
+      oldPoints: userPoints, // Send current user points
+      userId: userId, // Send user ID
     };
 
     try {
       const response = await fetch('http://127.0.0.1:8080/submit-recycle', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
 
@@ -33,9 +29,10 @@ export default function RecyclePage() {
         const responseData = await response.json();
         console.log('Server Response:', responseData);
 
-        // Update the user points based on the server response
+        // Update local state and context
         setUserPoints(responseData.newPoints);
-        setUser({ ...user, points: responseData.newPoints }); // Update points in global context
+        setUser({ ...user, points: responseData.newPoints });
+
         alert(`New Points: ${responseData.newPoints}`);
       } else {
         console.error('Error submitting data');

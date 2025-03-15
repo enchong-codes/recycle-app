@@ -1,5 +1,4 @@
 Stellan,c510d8ef5eda11dbdeb24d9f02f8f34df4c7da9831330cd6cf8ba3a47bf3418a,allisterwatson02@gmail.com,1,0,0,Estevan SK
 Negin,e7cf3ef4f17c3999a94f2c6f612e8a888e5b1026878e4e19398b23bd38ec221a,neginmarashi81@gmail.com,2,0,0,Estevan SK
 chris,9b8769a4a742959a2d0298c36fb70623f2dfacda8436237df08d8dfd5b37374c,c@c.com,4,0,0,Estevan SK
-chris2,5d7f15f2fce8ddb2dbef5c38be896c238ba7e0a432e396759030a853fa6b1151,c@c.ca,5,0,0,Regina SK
-
+chris2,5d7f15f2fce8ddb2dbef5c38be896c238ba7e0a432e396759030a853fa6b1151,c@c.ca,5,3,0,Regina SK

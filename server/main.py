@@ -76,24 +76,57 @@ def login_route():
 
 @app.route("/submit-recycle", methods=["POST"])
 def submit_recycle():
-    # Get data from the request
     data = request.get_json()
 
-    # Extract the action (recycled item), old points, and user_id from the request
+    # Extract item, old points, and user ID from the request
     action = data.get("item")
-    old_points = data.get("oldPoints", 0)  # Default to 0 if no points are sent
-    user_id = data.get("userId")
+    old_points = data.get("oldPoints", 0)  # Default to 0 if missing
+    user_id = str(data.get("userId"))  # Ensure it's a string for matching
 
     if action:
-        # Update points with the function
+        # Update points
         new_points = pointsmath.update_points(old_points, action)
 
-        # Update the user's points in the in-memory dictionary
-        user_points[user_id] = new_points  # Update the user's points
+        # Update the file to save new points
+        update_user_points(user_id, new_points)
+
+        # Update in-memory storage
+        user_points[user_id] = new_points  
 
         return jsonify({"newPoints": new_points}), 200
     else:
         return jsonify({"error": "Missing action"}), 400
+
+def update_user_points(user_id, new_points):
+    """Updates the user's points in user.txt."""
+    users = []
+
+    # Read user data and update points
+    with open(USER_DATA_FILE, "r") as file:
+        for line in file:
+            # Skip empty lines
+            if not line.strip():
+                continue
+
+            user_data = line.strip().split(",")
+            
+            # Ensure the line has enough data (7 columns expected)
+            if len(user_data) < 7:
+                print(f"Skipping malformed line: {line}")
+                continue
+
+            if user_data[3] == user_id:  # Match user_id (4th column)
+                user_data[4] = str(new_points)  # Update points
+            users.append(user_data)
+
+    # Rewrite the updated user data back to file
+    with open(USER_DATA_FILE, "w") as file:
+        for user in users:
+            file.write(",".join(user) + "\n")
+
+    print(f"Updated points for User ID {user_id} to {new_points}")
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
