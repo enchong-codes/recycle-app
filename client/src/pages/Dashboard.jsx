@@ -75,7 +75,7 @@ export default function Dashboard() {
       </div>
       <div className={styles.container}>
         <div className={styles.points}>
-          <h1>{'189'} Points</h1>
+          <h1>{user ? `${user.points} Points` : 'Loading points...'}</h1>
           <Link to={'/rewards'}>
             <button className={styles.rewardsbtn}>Rewards</button>
           </Link>

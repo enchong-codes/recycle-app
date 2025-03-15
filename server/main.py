@@ -12,6 +12,27 @@ USER_DATA_FILE = "user.txt"
 # In-memory dictionary to store user points (simulating a database)
 user_points = {}
 
+def get_user_data(user_id):
+    """Retrieves the user data from the user.txt file based on user_id."""
+    if not os.path.exists(USER_DATA_FILE):
+        return None
+
+    with open(USER_DATA_FILE, "r") as file:
+        for line in file:
+            user_data = line.strip().split(",")
+            if len(user_data) >= 7 and user_data[3] == str(user_id):  # Match user_id (4th column)
+                return {
+                    "username": user_data[0],
+                    "password": user_data[1],
+                    "email": user_data[2],
+                    "user_id": user_data[3],
+                    "points": int(user_data[4]),  # Points are at index 4
+                    "leaderboard": int(user_data[5]),
+                    "location": user_data[6]
+                }
+    return None
+
+
 # Hash function
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -72,7 +93,14 @@ def login_route():
         return jsonify({"error": "Missing fields"}), 400
 
     result, status_code = login(data["username"], data["password"])
+    
+    if status_code == 200:  # Only proceed if login was successful
+        user_id = result["user_id"]
+        user_data = get_user_data(user_id)  # Retrieve user data including points
+        result["points"] = user_data["points"]  # Add points to the result
+        
     return jsonify(result), status_code
+
 
 @app.route("/submit-recycle", methods=["POST"])
 def submit_recycle():

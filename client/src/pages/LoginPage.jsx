@@ -24,13 +24,18 @@ export default function LoginPage() {
       });
 
       const data = await response.json();
-      setMessage(data.message || data.error);
+      setMessage(data.message || data.error); // Set either success or error message
 
-      // If login is successful, navigate to the dashboard and update the context with user data
+      // If login is successful, update the context and navigate
       if (response.ok) {
-        console.log(data);
-        setUser(data); // Update the user context
-        navigate('/dashboard', { state: { user: data } }); // Redirect to the dashboard after successful login
+        // Assuming the data returned includes user_id, points, and username
+        const { user_id, points, user } = data;
+
+        // Update the user context with the data from the backend
+        setUser({ user_id, points, user });
+
+        // Navigate to the dashboard, passing user data via state
+        navigate('/dashboard', { state: { user: { user_id, points, user } } });
       }
     } catch (error) {
       console.error('Error during login:', error);

@@ -32,8 +32,6 @@ export default function RecyclePage() {
         // Update local state and context
         setUserPoints(responseData.newPoints);
         setUser({ ...user, points: responseData.newPoints });
-
-        alert(`New Points: ${responseData.newPoints}`);
       } else {
         console.error('Error submitting data');
       }
