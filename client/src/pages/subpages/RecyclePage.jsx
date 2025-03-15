@@ -34,6 +34,10 @@ export default function RecyclePage() {
         setUserPoints(responseData.newPoints);
         setUser({ ...user, points: responseData.newPoints });
 
+        // Update the number of bottles saved for the user
+        const updatedBottlesSaved = user.bottlesSaved + 1 || 1; // Ensure it's 1 if undefined
+        setUser({ ...user, bottlesSaved: updatedBottlesSaved }); // Update bottles saved in context
+
         // Set the success message with the updated points
         setSuccessMessage(`Success! Current points: ${responseData.newPoints}`);
       } else {
