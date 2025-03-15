@@ -1,62 +1,154 @@
-import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext'; // Import the useUser hook
 
-export default function Quiz() {
+export default function QuizPage() {
+  // Define quiz questions and answers
+  const quizzes = [
+    {
+      question: 'How much energy does recycling one aluminum can save?',
+      options: [
+        'A) Enough to power a TV for 30 minutes',
+        'B) Enough to power a TV for three hours',
+        'C) Enough to power a fridge for a day',
+        'D) Enough to power a computer for an hour',
+      ],
+      correctAnswer: 'B) Enough to power a TV for three hours',
+    },
+    {
+      question:
+        'How long can plastic bottles take to break down in the environment?',
+      options: ['A) 50 years', 'B) 150 years', 'C) 250 years', 'D) 450 years'],
+      correctAnswer: 'D) 450 years',
+    },
+    {
+      question: 'Recycling one ton of paper saves how many trees?',
+      options: ['A) 5', 'B) 10', 'C) 17', 'D) 25'],
+      correctAnswer: 'C) 17',
+    },
+    {
+      question:
+        'How quickly can a recycled glass bottle return to a store shelf?',
+      options: ['A) 7 days', 'B) 30 days', 'C) 90 days', 'D) 6 months'],
+      correctAnswer: 'B) 30 days',
+    },
+    {
+      question:
+        'How much more energy does producing new plastic use compared to recycling old plastic?',
+      options: ['A) 10%', 'B) 30%', 'C) 50%', 'D) 70%'],
+      correctAnswer: 'D) 70%',
+    },
+  ];
+
   const { user, setUser } = useUser(); // Access user data and setUser from context
-  const [selectedItem, setSelectedItem] = useState('');
-  const [userPoints, setUserPoints] = useState(user ? user.points : 0); // Initialize with user's points
-  const userId = user ? user.user_id : 'test_user'; // Use userId from the user object
+  const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState('');
+  const [userAnswers, setUserAnswers] = useState([]);
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [quizFinished, setQuizFinished] = useState(false);
+  const [score, setScore] = useState(0);
+  const [message, setMessage] = useState('');
+  const [pointsAwarded, setPointsAwarded] = useState(0);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleStartQuiz = () => {
+    setQuizStarted(true);
+    setQuizFinished(false);
+    setCurrentQuizIndex(0);
+    setUserAnswers([]);
+    setScore(0);
+    setMessage('');
+    setPointsAwarded(0);
+  };
 
-    const item = e.target.item.value; // Get the selected item
+  const handleAnswerSelection = (answer) => {
+    setSelectedAnswer(answer);
+  };
 
-    // Prepare the data to send in the request body
-    const data = {
-      item: item,
-      oldPoints: userPoints, // Send the current points of the user
-      userId: userId, // Send the userId
-    };
+  const handleNextQuiz = () => {
+    // Store the user's answer and move to the next quiz
+    setUserAnswers([...userAnswers, selectedAnswer]);
 
-    try {
-      const response = await fetch('http://127.0.0.1:8080/submit-recycle', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+    // Check if the selected answer is correct and update the score
+    if (selectedAnswer === quizzes[currentQuizIndex].correctAnswer) {
+      setScore(score + 1);
+    }
 
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log('Server Response:', responseData);
-
-        // Update the user points based on the server response
-        setUserPoints(responseData.newPoints);
-        setUser({ ...user, points: responseData.newPoints }); // Update points in global context
-        alert(`New Points: ${responseData.newPoints}`);
+    // Move to the next quiz
+    if (currentQuizIndex < quizzes.length - 1) {
+      setCurrentQuizIndex(currentQuizIndex + 1);
+      setSelectedAnswer('');
+    } else {
+      setQuizFinished(true); // End quiz when all questions are answered
+      // Award points based on the score
+      let points = 0;
+      if (score === 5) {
+        points = 20;
+        setMessage(
+          '🎉 Congratulations! You scored 100%! You have earned 20 points.'
+        );
+      } else if (score === 4) {
+        points = 15;
+        setMessage(
+          '🎉 Congratulations! You scored 80%! You have earned 15 points.'
+        );
       } else {
-        console.error('Error submitting data');
+        points = 0;
+        setMessage('❌ Try Again! You scored below 80%. Please try again.');
       }
-    } catch (error) {
-      console.error('Error:', error);
+      setPointsAwarded(points);
+
+      // Update user points in the context
+      if (user) {
+        setUser({ ...user, points: user.points + points });
+      }
     }
   };
 
-  // Handle change in the selected recyclable item
-  const handleItemChange = (e) => {
-    setSelectedItem(e.target.value); // Update the selected item when changed
+  const handleRetryQuiz = () => {
+    setQuizStarted(false); // Reset quiz state
   };
 
   return (
     <section>
-      <h1>Quiz</h1>
+      {!quizStarted ? (
+        <button onClick={handleStartQuiz}>Start Quiz</button>
+      ) : quizFinished ? (
+        <div>
+          <h2>Quiz Finished!</h2>
+          <p>
+            Your score: {score}/{quizzes.length}
+          </p>
+          <p className={score >= 4 ? 'success-message' : 'error-message'}>
+            {message}
+          </p>
+          <button onClick={handleRetryQuiz}>Try Again</button>
+        </div>
+      ) : (
+        <div>
+          <h2>{quizzes[currentQuizIndex].question}</h2>
+          <div>
+            {quizzes[currentQuizIndex].options.map((option, index) => (
+              <div key={index}>
+                <input
+                  type="radio"
+                  id={option}
+                  name="answer"
+                  value={option}
+                  checked={selectedAnswer === option}
+                  onChange={() => handleAnswerSelection(option)}
+                />
+                <label htmlFor={option}>{option}</label>
+              </div>
+            ))}
+          </div>
+          <button onClick={handleNextQuiz} disabled={!selectedAnswer}>
+            Next Question
+          </button>
+        </div>
+      )}
       <Link to={'/dashboard'}>
         <button>Home</button>
       </Link>
-      <form onSubmit={handleSubmit}></form>
     </section>
   );
 }
