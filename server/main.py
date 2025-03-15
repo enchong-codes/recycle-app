@@ -32,6 +32,35 @@ def get_user_data(user_id):
                 }
     return None
 
+@app.route('/leaderboard', methods=['GET'])
+def leaderboard():
+    try:
+        # Open and read the user.txt file
+        with open('user.txt', 'r') as file:
+            users = file.readlines()
+
+        leaderboard = []
+        for user in users:
+            # Skip empty lines or lines with incorrect number of parts
+            parts = user.split(',')
+            if len(parts) != 7:
+                print(f"Skipping malformed line: {user.strip()}")
+                continue  # Skip this line if it doesn't have exactly 7 parts
+            
+            leaderboard.append({
+                'username': parts[0].strip(),
+                'points': int(parts[4].strip())  # Points are at index 4 in your file
+            })
+
+        # Sort leaderboard by points in descending order
+        leaderboard = sorted(leaderboard, key=lambda x: x['points'], reverse=True)
+
+        return jsonify(leaderboard)
+
+    except Exception as e:
+        print("Error reading file:", e)
+        return jsonify({'error': 'Unable to load leaderboard'}), 500
+
 
 # Hash function
 def hash_password(password):

@@ -1,9 +1,6 @@
-/* main {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-} */
+.dashMain {
+  background-color: #ffffff;
+}
 
 .container {
   display: flex;

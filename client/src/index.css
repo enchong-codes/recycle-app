@@ -13,6 +13,8 @@
   width: 330px;
   height: 760px;
   background-color: #ffffff;
+  /* background-image: url('images/treebg.jpeg'); */
+  /* background-size: cover; */
   border: 6px solid black;
   border-radius: 25px;
 }

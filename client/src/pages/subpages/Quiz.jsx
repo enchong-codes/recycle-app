@@ -81,12 +81,12 @@ export default function QuizPage() {
       setQuizFinished(true); // End quiz when all questions are answered
       // Award points based on the score
       let points = 0;
-      if (score === 5) {
+      if (score === 4) {
         points = 20;
         setMessage(
           '🎉 Congratulations! You scored 100%! You have earned 20 points.'
         );
-      } else if (score === 4) {
+      } else if (score === 3) {
         points = 15;
         setMessage(
           '🎉 Congratulations! You scored 80%! You have earned 15 points.'

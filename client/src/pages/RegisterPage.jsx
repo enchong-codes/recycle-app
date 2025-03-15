@@ -21,12 +21,15 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Add points to the formData before sending to the backend
+    const dataToSend = { ...formData, points: 0 }; // Setting points to 0 for new users
+
     // Make the API request and get the response
     try {
       const response = await fetch('http://127.0.0.1:8080/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSend),
       });
 
       const data = await response.json();
@@ -34,8 +37,12 @@ export default function Register() {
 
       // Check if registration was successful
       if (response.ok) {
-        // Update user in context
-        setUser(data); // Store the registered user globally
+        // Update user in context with points data
+        setUser({
+          username: data.user,
+          points: 0, // Set initial points to 0
+          user_id: data.user_id,
+        });
 
         // Navigate to the dashboard with the user data in the state
         navigate('/dashboard', { state: { user: data } });

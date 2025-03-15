@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
 import { RouterProvider, Link, createBrowserRouter } from 'react-router-dom';
-import axios from 'axios';
 import './App.css';
 
 export default function App() {
   return (
     <main>
-      <h1>recycle!</h1>
-      <Link to={'/login'}>
-        <button>log in</button>
-      </Link>
-      <Link to={'/register'}>
-        <button>register</button>
-      </Link>
+      <h1 className="appName">EcoPoints</h1>
+      <div className="appDiv">
+        <Link to={'/login'}>
+          <button className="appBtn">Log In</button>
+        </Link>
+        <Link to={'/register'}>
+          <button className="appBtn">Register</button>
+        </Link>
+      </div>
     </main>
   );
 }

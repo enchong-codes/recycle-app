@@ -1,0 +1,17 @@
+.appName {
+  font-size: 3rem;
+}
+
+.appDiv {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.appBtn {
+  height: 30px;
+  width: 100px;
+  border: 2px solid black;
+  border-radius: 10px;
+  background-color: #fbfbdb;
+}

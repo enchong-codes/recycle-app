@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useUser } from '../../contexts/UserContext'; // Import the useUser hook
+import RewardsPicture from '../../images/rewards.png';
 
 export default function Rewards() {
   const { user, setUser } = useUser(); // Access user data and setUser from context
@@ -52,9 +53,13 @@ export default function Rewards() {
 
   return (
     <section>
-      <h1>Rewards</h1>
+      <img
+        src={RewardsPicture}
+        alt="picture of rewards roadmap"
+        style={{ width: 100 + '%' }}
+      />
       <Link to={'/dashboard'}>
-        <button>Home</button>
+        <button style={{ display: 'flex', justifySelf: 'center' }}>Home</button>
       </Link>
       <form onSubmit={handleSubmit}></form>
     </section>

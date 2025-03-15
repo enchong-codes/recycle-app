@@ -111,9 +111,7 @@ export default function Dashboard() {
         <Link to={'/quickfacts'}>
           <button>Quick Facts</button>
         </Link>
-        <Link to={'/resources'}>
-          <button>Resources</button>
-        </Link>
+        <button>Resources</button>
       </div>
     </main>
   );
