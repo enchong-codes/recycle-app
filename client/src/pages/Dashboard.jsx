@@ -8,27 +8,27 @@ import notepad from '../images/notepad.png';
 import podium from '../images/podium.png';
 
 export default function Dashboard() {
-  const { user } = useUser();
+  const { user } = useUser(); // Access user context directly
   const [selectedRange, setSelectedRange] = useState('day');
-  const [bottlesSaved, setBottlesSaved] = useState(0); // State for dynamic bottles saved (for day range)
-  const [carbonReduced, setCarbonReduced] = useState(0); // State for dynamic carbon reduced (for day range)
+  const [bottlesSaved, setBottlesSaved] = useState(0);
+  const [carbonReduced, setCarbonReduced] = useState(0);
 
-  // Dynamically update bottlesSaved and carbonReduced only for the "day" range
+  console.log(user);
+  // Update the bottlesSaved and carbonReduced based on the selected range and user data
   useEffect(() => {
     if (user) {
       if (selectedRange === 'day') {
-        setBottlesSaved(user.bottlesSaved || 0); // Use dynamic value for day
+        setBottlesSaved(user.bottlesSaved || 0);
 
-        // Calculate carbon reduced (1 bottle = 83g of CO2, convert to kg)
         const carbon = ((user.bottlesSaved || 0) * 83) / 1000; // CO2 in kg
         setCarbonReduced(carbon);
       }
     }
-  }, [selectedRange, user]); // Re-run effect when the range or user changes
+  }, [selectedRange, user]); // Ensure that both selectedRange and user are dependencies
 
+  // Greeting based on the time of day
   function getGreeting() {
-    const currentHour = new Date().getHours(); // Get the current hour (0-23)
-
+    const currentHour = new Date().getHours();
     if (currentHour >= 5 && currentHour < 12) {
       return 'Good Morning';
     } else if (currentHour >= 12 && currentHour < 18) {

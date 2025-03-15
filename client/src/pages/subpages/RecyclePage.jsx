@@ -1,13 +1,13 @@
-import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext'; // Import the useUser hook
 
 export default function RecyclePage() {
   const { user, setUser } = useUser(); // Access user data and setUser from context
   const [selectedItem, setSelectedItem] = useState('');
   const [userPoints, setUserPoints] = useState(user ? user.points : 0); // Initialize with user's points
-  const [successMessage, setSuccessMessage] = useState(''); // State for success message
-  const userId = user ? user.user_id : 'test_user'; // Use userId from the user object
+  const [successMessage, setSuccessMessage] = useState('');
+  const userId = user ? user.user_id : 'test_user';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,11 +32,13 @@ export default function RecyclePage() {
 
         // Update local state and context
         setUserPoints(responseData.newPoints);
-        setUser({ ...user, points: responseData.newPoints });
 
-        // Update the number of bottles saved for the user
-        const updatedBottlesSaved = user.bottlesSaved + 1 || 1; // Ensure it's 1 if undefined
-        setUser({ ...user, bottlesSaved: updatedBottlesSaved }); // Update bottles saved in context
+        // Explicitly set user data in context after the submit
+        setUser({
+          ...user,
+          points: responseData.newPoints, // Update points in the context
+          bottlesSaved: (user.bottlesSaved || 0) + 1, // Increment bottles saved
+        });
 
         // Set the success message with the updated points
         setSuccessMessage(`Success! Current points: ${responseData.newPoints}`);
@@ -48,7 +50,6 @@ export default function RecyclePage() {
     }
   };
 
-  // Handle change in the selected recyclable item
   const handleItemChange = (e) => {
     setSelectedItem(e.target.value); // Update the selected item when changed
   };
