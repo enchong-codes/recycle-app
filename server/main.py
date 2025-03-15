@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import pointsmath
 import hashlib
 import os
 
@@ -7,6 +8,9 @@ app = Flask(__name__)
 CORS(app)  # Allows React to make requests
 
 USER_DATA_FILE = "user.txt"
+
+# In-memory dictionary to store user points (simulating a database)
+user_points = {}
 
 # Hash function
 def hash_password(password):
@@ -20,6 +24,9 @@ def create_account(username, password, email, location):
 
     with open(USER_DATA_FILE, "a") as file:
         file.write(user_data + "\n")
+
+    # Initialize user points in memory
+    user_points[user_id] = 0
 
     return {"message": f"Account for {username} created successfully!", "user_id": user_id, "user": username}
 
@@ -41,6 +48,9 @@ def login(username, password):
         for line in file:
             stored_username, stored_hash, email, user_id, points, leaderboard, location = line.strip().split(",")
             if stored_username == username and stored_hash == hashed_password:
+                # Initialize user points in memory if not already initialized
+                if int(user_id) not in user_points:
+                    user_points[int(user_id)] = 0
                 return {"message": f"Login successful! Welcome back, {username}.", "user_id": user_id, "user": username}, 200
 
     return {"error": "Invalid username or password."}, 401
@@ -63,6 +73,27 @@ def login_route():
 
     result, status_code = login(data["username"], data["password"])
     return jsonify(result), status_code
+
+@app.route("/submit-recycle", methods=["POST"])
+def submit_recycle():
+    # Get data from the request
+    data = request.get_json()
+
+    # Extract the action (recycled item), old points, and user_id from the request
+    action = data.get("item")
+    old_points = data.get("oldPoints", 0)  # Default to 0 if no points are sent
+    user_id = data.get("userId")
+
+    if action:
+        # Update points with the function
+        new_points = pointsmath.update_points(old_points, action)
+
+        # Update the user's points in the in-memory dictionary
+        user_points[user_id] = new_points  # Update the user's points
+
+        return jsonify({"newPoints": new_points}), 200
+    else:
+        return jsonify({"error": "Missing action"}), 400
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)

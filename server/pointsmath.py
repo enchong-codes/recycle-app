@@ -1,9 +1,7 @@
-def get_streak_multiplier(streak_days):
-    """Returns the streak multiplier based on the number of consecutive days."""
-    multipliers = {1: 1.0, 2: 1.2, 3: 1.4, 4: 1.6, 5: 1.75, 6: 1.85, 7: 2.0}
-    return multipliers.get(min(streak_days, 7), 1.0)
 
-def update_points(old_points, streak_days, action):
+
+
+def update_points(old_points, action):
     """Updates the user's points total based on their streak and recycling action."""
     
     # Define point values for different recyclable items
@@ -18,24 +16,22 @@ def update_points(old_points, streak_days, action):
     # Get the points for the action
     add_points = recycling_points.get(action, 0)
 
-    # Get the current streak multiplier
-    current_multiplier = get_streak_multiplier(streak_days)
 
     # Calculate new points total
-    current_points = add_points * current_multiplier + old_points
+    current_points = add_points + old_points
 
     return current_points
 
 # Example Usage
-old_points = ()
-streak_days = ()
+old_points = 0
 action = ()
 
-new_points = update_points(old_points, streak_days, action)
+new_points = update_points(old_points, action)
 print(f"New Points Total: {new_points}")
 
 
 USER_DATA_FILE = "user.txt"
+
 
 def update_rank(username, add_points):
     """Updates the user's points and reorders the leaderboard based on new scores."""

@@ -3,6 +3,20 @@
   font-family: Inter, sans-serif;
 }
 
+.phoneContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  justify-self: center;
+  margin-top: 20px;
+  width: 330px;
+  height: 760px;
+  background-color: #ffffff;
+  border: 6px solid black;
+  border-radius: 25px;
+}
+
 body {
-  background-color: #fbfbdb;
+  background-color: #b8b888;
 }
