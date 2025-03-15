@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../contexts/UserContext'; // Importing UserContext to set the user globally
 
 export default function Register() {
-  // useNavigate should be used inside the component body
+  const { setUser } = useUser(); // Access setUser from the context to update the global user
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -31,9 +32,13 @@ export default function Register() {
       const data = await response.json();
       setMessage(data.message || data.error);
 
-      // Check if registration was successful and navigate to home page
+      // Check if registration was successful
       if (response.ok) {
-        navigate('/dashboard', { state: { user: data } }); // Redirect to home page after successful registration
+        // Update user in context
+        setUser(data); // Store the registered user globally
+
+        // Navigate to the dashboard with the user data in the state
+        navigate('/dashboard', { state: { user: data } });
       }
     } catch (error) {
       console.error('Error during registration:', error);
